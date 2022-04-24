@@ -1,5 +1,5 @@
 from constants import *
-from classes.Shuttle import Shuttle
+from Shuttle import Shuttle
 import pygame
 
 pygame.init()
@@ -13,11 +13,32 @@ while running:
             running = False
 
     screen.fill((0,0,0))
-    pygame.draw.circle(screen, (0, 0, 255), INITIAL_SHUTTLE_POSITION, 20)
-    apollo13 = Shuttle("Apollo13", 100, INITIAL_SHUTTLE_POSITION)
-    apollo13.draw_shuttle(screen)
-    apollo13.move_left()
-    apollo13.draw_shuttle(screen)
+
+    #? ------------------- initialize objects -------------------
+    shuttle = Shuttle("Shuttle", 100, INITIAL_SHUTTLE_POSITION)
+
+    #? -------------------- keys detection ---------------------
+    keys = pygame.key.get_pressed()
+
+    if keys[pygame.K_a]:
+        shuttle.move_left()
+
+    if keys[pygame.K_d]:
+        shuttle.move_right()
+
+    if keys[pygame.K_w]:
+        shuttle.move_up()
+    
+    if keys[pygame.K_s]:
+        shuttle.move_down()
+
+    if keys[pygame.K_SPACE]:
+        shuttle.shoot(screen, shuttle.get_position())
+
+    #? --------------------- drawing objects ---------------------------
+    shuttle.draw_shuttle(screen)
+
+    keys=pygame.key.get_pressed()
 
     pygame.display.flip()
 

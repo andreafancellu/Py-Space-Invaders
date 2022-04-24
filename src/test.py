@@ -1,5 +1,5 @@
 import unittest
-from src.classes.Shuttle import Shuttle
+from Shuttle import Shuttle
 
 class TestShuttleMethods(unittest.TestCase):
     
