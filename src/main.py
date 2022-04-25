@@ -8,9 +8,9 @@ import time
 pygame.init()
 
 #? ----------------------- Initialize Variables -------------------------------
-clock = pygame.time.Clock()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 bg = pygame.image.load("/home/andrea/Projects/Py-Space-Invaders/data/background.png")
+pygame.display.set_caption('Py-Space-Invaders')
 
 #? ----------------------- Initialize Texts -----------------------------------
 font_game_over = pygame.font.SysFont("uroob", 200)
@@ -73,17 +73,23 @@ while running:
     #? ----------------------- Collisions -------------------------------------
     end = time.time()
     if (end - start) > 0.2:
-        shuttle.collision(alien, screen)
+        shuttle.collision(alien)
         start = time.time()
         end = 0
+    
+    if (end - start) > 0.2:
+        alien.collision(bullet)
 
     #? ----------------------- HP-Text ----------------------------------------
     if shuttle.get_hp() >= 70: 
         color_hp = (0, 255, 0)
+
     elif 40 <= shuttle.get_hp() <= 60:
         color_hp = (255, 255, 0)
+
     elif shuttle.get_hp() <= 30:
         color_hp = (255, 0, 0)
+
     hp_text = font_text.render("hp: ", True, (255, 255, 255))
     hp = font_text.render(f"{shuttle.get_hp()}", True, color_hp)
     screen.blit(hp_text, (10, 10))
@@ -103,11 +109,6 @@ while running:
         text = font_game_over.render("Game Over", True, (255,255,255))
         screen.blit(text, (SCREEN_WIDTH/2 - text.get_width()/2, SCREEN_HEIGHT/2 - text.get_height()/2))
         
-
-
-    
-
-    #clock.tick(FPS)
     pygame.display.flip()
     
 

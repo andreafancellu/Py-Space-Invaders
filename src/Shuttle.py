@@ -89,18 +89,18 @@ class Shuttle:
         self.is_dead = True
         print(f"{self.name} has died")
 
-    def take_damage(self, damage, screen):
+    def take_damage(self, damage):
         self.hp -= damage
         if self.hp <= 0:
             self.die()
         else:
             print(f"{self.name} has taken {damage} damage, now has {self.hp} hp")
-        self.draw_shuttle(screen)   
+        #self.draw_shuttle(screen)   
 
-    def collision(self, obstacle, screen):
+    def collision(self, obstacle):
         if self.rect.colliderect(obstacle.get_rect()):
             print(f"{self.name} has collided with {obstacle.get_name()}")
-            self.take_damage(10, screen)
+            self.take_damage(10)
 
     def draw_shuttle(self, screen):
         screen.blit(self.texture, self.position)

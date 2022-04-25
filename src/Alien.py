@@ -8,7 +8,6 @@ class Alien:
         self.position = position
         self.texture = pygame.image.load("/home/andrea/Projects/Py-Space-Invaders/data/alien.png").convert()
         self.rect = self.texture.get_rect()
-        pygame.Rect(self.position[0], self.position[1], self.rect.width, self.rect.height)
 
     #* getters and setters
     def get_name(self):
@@ -34,8 +33,18 @@ class Alien:
 
     #* in-game functions
     def draw_alien(self, screen):
-        screen.blit(self.texture, self.position)
-        self.rect = pygame.Rect(self.position[0], self.position[1], self.rect.width, self.rect.height)
+        if not(self.is_dead):
+            screen.blit(self.texture, self.position)
+            self.rect = pygame.Rect(self.position[0], self.position[1], self.rect.width, self.rect.height)
+
+    def die(self):
+        self.set_is_dead = True
+        self.set_position([-100, -100])
+
+    def collision(self, obstacle):
+        if self.rect.colliderect(obstacle.get_rect()):
+            print(f"{self.name} has collided with {obstacle.get_name()}")
+            
     
 
     
