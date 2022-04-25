@@ -9,12 +9,11 @@ class Bullet:
     def get_pos(self):
         return self.pos
 
-    def get_shot(self):
-        return self.shot
+    def set_pos(self, pos):
+        self.pos = pos
         
     def draw_bullet(self, screen):
-        pygame.draw.circle(screen, (255, 0, 0), (self.get_pos()[0]+20, self.get_pos()[1]), 10)
-        self.move_bullet()
+        pygame.draw.circle(screen, (255, 0, 0), (self.pos[0], self.pos[1]), 10)
 
     def move_bullet(self):
         self.pos[1] -= 1

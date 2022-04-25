@@ -1,5 +1,5 @@
-from Bullet import Bullet
 from constants import *
+from Bullet import Bullet
 import pygame
 
 from constants import INITIAL_SHUTTLE_POSITION
@@ -14,6 +14,7 @@ class Shuttle:
         self.texture = pygame.image.load("/home/andrea/Projects/Py-Space-Invaders/data/shuttle.png").convert()
         self.rect = self.texture.get_rect()
         self.score = 0
+        self.shot = False
         self.hit = True 
 
     #* getters and setters
@@ -35,6 +36,9 @@ class Shuttle:
     def get_score(self):
         return self.score
 
+    def get_shot(self):
+        return self.shot
+
     def get_hit(self):
         return self.hit
 
@@ -49,6 +53,9 @@ class Shuttle:
 
     def set_score(self, score):
         self.score = score
+
+    def set_shot(self, shot):
+        self.shot = shot
 
     def set_hit(self, hit):
         self.hit = hit
@@ -98,9 +105,8 @@ class Shuttle:
     def draw_shuttle(self, screen):
         screen.blit(self.texture, self.position)
     
-    def shoot(self, screen, start):
-        bullet = Bullet(start)
-        bullet.draw_bullet(screen)
-        
+    def shoot(self):
+        self.shot = True
+
     def __str__(self):
         return f"the shuttle named {self.name} has {self.hp}"

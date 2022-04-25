@@ -1,5 +1,6 @@
 from constants import *
 from Shuttle import Shuttle
+from Bullet import Bullet
 from Alien import Alien
 import pygame
 import time
@@ -18,6 +19,7 @@ font_text = pygame.font.SysFont("uroob", 30)
 #? ----------------------- Initialize Game-Objects ----------------------------
 shuttle = Shuttle("Apollo13", 100, INITIAL_SHUTTLE_POSITION)
 alien = Alien("Yoda", INITIAL_ALIEN_POSITION)
+bullet = Bullet([shuttle.get_position()[0]+20, shuttle.get_position()[1]-10])
 
 running = True
 start = time.time()
@@ -46,7 +48,7 @@ while running:
         shuttle.move_down()
 
     if keys[pygame.K_SPACE]:
-        shuttle.shoot(screen, shuttle.get_position())
+        shuttle.shoot()
 
     if keys[pygame.K_ESCAPE]:
         running = False
@@ -55,6 +57,18 @@ while running:
     screen.blit(bg, (0,0))
     shuttle.draw_shuttle(screen)
     alien.draw_alien(screen)
+    
+
+    #? ----------------------- Shooting ----------------------------
+    if shuttle.get_shot():
+        bullet.move_bullet()
+        bullet.draw_bullet(screen) 
+
+    if not(shuttle.get_shot()):
+        bullet.set_pos([shuttle.get_position()[0]+20, shuttle.get_position()[1]-10])
+
+    if bullet.get_pos()[1] < 0:
+        shuttle.set_shot(False)
 
     #? ----------------------- Collisions -------------------------------------
     end = time.time()
