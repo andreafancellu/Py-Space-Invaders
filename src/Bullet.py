@@ -13,7 +13,8 @@ class Bullet:
         return self.shot
         
     def draw_bullet(self, screen):
-        pygame.draw.circle(screen, (255, 0, 0), (self.get_pos()[0]+20, self.get_pos()[1]), 5)
+        pygame.draw.circle(screen, (255, 0, 0), (self.get_pos()[0]+20, self.get_pos()[1]), 10)
+        self.move_bullet()
 
     def move_bullet(self):
         self.pos[1] -= 1
