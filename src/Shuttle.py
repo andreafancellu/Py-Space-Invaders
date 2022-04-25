@@ -104,9 +104,16 @@ class Shuttle:
 
     def draw_shuttle(self, screen):
         screen.blit(self.texture, self.position)
+        #pygame.draw.rect(screen, (0, 120, 120), self.rect)
     
     def shoot(self):
         self.shot = True
+
+    def score_up(self):
+        self.score += 1
+    
+    def score_down(self):
+        self.score -= 1
 
     def __str__(self):
         return f"the shuttle named {self.name} has {self.hp}"

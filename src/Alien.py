@@ -36,14 +36,24 @@ class Alien:
         if not(self.is_dead):
             screen.blit(self.texture, self.position)
             self.rect = pygame.Rect(self.position[0], self.position[1], self.rect.width, self.rect.height)
+            #pygame.draw.rect(screen, (124, 123, 89), self.rect)
+
+    def move(self):
+        self.position[1] += 0.1
+        self.set_rect()
+        if self.position[1] > 700:
+            self.position[1] = 0
 
     def die(self):
         self.set_is_dead = True
         self.set_position([-100, -100])
 
+    #! inutile post bullet.collision(alien)
     def collision(self, obstacle):
         if self.rect.colliderect(obstacle.get_rect()):
             print(f"{self.name} has collided with {obstacle.get_name()}")
+            self.die()
+
             
     
 

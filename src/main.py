@@ -18,8 +18,16 @@ font_text = pygame.font.SysFont("uroob", 30)
 
 #? ----------------------- Initialize Game-Objects ----------------------------
 shuttle = Shuttle("Apollo13", 100, INITIAL_SHUTTLE_POSITION)
-alien = Alien("Yoda", INITIAL_ALIEN_POSITION)
 bullet = Bullet([shuttle.get_position()[0]+20, shuttle.get_position()[1]-10])
+
+aliens = []
+for i in range(30):
+    if i <= 10:
+        aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-85*i, SCREEN_HEIGHT-650]))
+    if 11 <= i <= 20:
+        aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-85*(i-10), SCREEN_HEIGHT-550]))
+    if 21 <= i <= 30:
+        aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-85*(i-20), SCREEN_HEIGHT-450]))
 
 running = True
 start = time.time()
@@ -56,8 +64,12 @@ while running:
     #? ----------------------- Drawing Game-Objects ---------------------------
     screen.blit(bg, (0,0))
     shuttle.draw_shuttle(screen)
-    alien.draw_alien(screen)
-    
+    for alien in aliens:
+        alien.draw_alien(screen)
+
+    #? ----------------------- Aliens mMvements ----------------------------
+    for alien in aliens:
+        alien.move()
 
     #? ----------------------- Shooting ----------------------------
     if shuttle.get_shot():
@@ -73,12 +85,19 @@ while running:
     #? ----------------------- Collisions -------------------------------------
     end = time.time()
     if (end - start) > 0.2:
-        shuttle.collision(alien)
-        start = time.time()
-        end = 0
+        for alien in aliens:
+            shuttle.collision(alien)
+            start = time.time()
+            end = 0
     
-    if (end - start) > 0.2:
-        alien.collision(bullet)
+    for alien in aliens:
+        if bullet.collision(alien):
+            alien.die()
+            shuttle.set_shot(False)
+            shuttle.score_up()
+
+    '''if (end - start) > 0.1:
+        alien.collision(bullet)'''
 
     #? ----------------------- HP-Text ----------------------------------------
     if shuttle.get_hp() >= 70: 
@@ -96,7 +115,7 @@ while running:
     screen.blit(hp, (45, 10))
 
     #? ----------------------- Score-Text -------------------------------------
-    score_text = font_text.render("Score: ", True, (255, 255, 255))
+    score_text = font_text.render("score: ", True, (255, 255, 255))
     score = font_text.render(f"{shuttle.get_score()}", True, (0, 0, 255))
     screen.blit(score_text, (SCREEN_WIDTH-90, 10))
     screen.blit(score, (SCREEN_WIDTH-20, 10))
