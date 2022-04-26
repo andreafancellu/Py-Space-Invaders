@@ -23,13 +23,13 @@ shuttle = Shuttle("Apollo13", 100, INITIAL_SHUTTLE_POSITION)
 bullet = Bullet([shuttle.get_position()[0]+20, shuttle.get_position()[1]-10])
 
 aliens = []
-for i in range(30):
+for i in range(31):
     if i <= 10:
-        aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-85*i, SCREEN_HEIGHT-650]))
+        aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-77*i, SCREEN_HEIGHT-650]))
     if 11 <= i <= 20:
-        aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-85*(i-10), SCREEN_HEIGHT-500]))
+        aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-77*(i-10), SCREEN_HEIGHT-500]))
     if 21 <= i <= 30:
-        aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-85*(i-20), SCREEN_HEIGHT-350]))
+        aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-77*(i-20), SCREEN_HEIGHT-350]))
 
 running = True
 
@@ -129,12 +129,25 @@ while running:
     screen.blit(score_text, (SCREEN_WIDTH-90, 10))
     screen.blit(score, (SCREEN_WIDTH-20, 10))
 
+    #? ----------------------- Win  -------------------------------------------as
+    if (len(aliens) - 1) == shuttle.get_score():
+        print("You Win!")
+        screen.fill((0,0,0))
+        screen.blit(bg, (0,0))
+        shuttle.draw_shuttle(screen)
+        text = font_game_over.render("You Win!!!", True, (255,255,255))
+        screen.blit(text, (SCREEN_WIDTH/2 - text.get_width()/2, SCREEN_HEIGHT/2 - text.get_height()/2))
+        score_text = font_text.render("Final Score: ", True, (255, 255, 255))
+        score = font_text.render(f"{shuttle.get_score() * shuttle.get_hp()}", True, (0, 255, 255))
+        screen.blit(score_text, (SCREEN_WIDTH-480, 500))
+        screen.blit(score, (SCREEN_WIDTH-370, 500))
+        
     #? ----------------------- Game Over --------------------------------------
     if shuttle.get_is_dead():
         print("Game Over")
         screen.fill((0,0,0))
         screen.blit(bg, (0,0))
-        text = font_game_over.render("Game Over", True, (255,255,255))
+        text = font_game_over.render("Game Over :(", True, (255,255,255))
         screen.blit(text, (SCREEN_WIDTH/2 - text.get_width()/2, SCREEN_HEIGHT/2 - text.get_height()/2))
         
     pygame.display.flip()
