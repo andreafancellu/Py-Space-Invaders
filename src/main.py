@@ -1,9 +1,11 @@
+from random import random
 from constants import *
 from Shuttle import Shuttle
 from Bullet import Bullet
 from Alien import Alien
 import pygame
 import time
+import random
 
 pygame.init()
 
@@ -25,11 +27,12 @@ for i in range(30):
     if i <= 10:
         aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-85*i, SCREEN_HEIGHT-650]))
     if 11 <= i <= 20:
-        aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-85*(i-10), SCREEN_HEIGHT-550]))
+        aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-85*(i-10), SCREEN_HEIGHT-500]))
     if 21 <= i <= 30:
-        aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-85*(i-20), SCREEN_HEIGHT-450]))
+        aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-85*(i-20), SCREEN_HEIGHT-350]))
 
 running = True
+
 start = time.time()
 
 while running:
@@ -67,9 +70,15 @@ while running:
     for alien in aliens:
         alien.draw_alien(screen)
 
-    #? ----------------------- Aliens mMvements ----------------------------
+    #? ----------------------- Aliens Movements ----------------------------
+    rand = random.randint(0,1)
     for alien in aliens:
-        alien.move()
+        alien.move_down()
+        '''if rand == 1:
+            alien.move_left()
+        else:
+            alien.move_right()'''
+
 
     #? ----------------------- Shooting ----------------------------
     if shuttle.get_shot():
