@@ -38,12 +38,20 @@ class Alien:
             self.rect = pygame.Rect(self.position[0], self.position[1], self.rect.width, self.rect.height)
             #pygame.draw.rect(screen, (124, 123, 89), self.rect)
 
-    def move(self):
+    def move_down(self):
         self.position[1] += 0.1
         self.set_rect()
         if self.position[1] > 700:
             self.position[1] = 0
-
+    
+    def move_left(self):
+        self.position[0] -= 0.5
+        self.set_rect()
+    
+    def move_right(self):
+        self.position[0] += 0.5
+        self.set_rect()
+        
     def die(self):
         self.set_is_dead = True
         self.set_position([-100, -100])
