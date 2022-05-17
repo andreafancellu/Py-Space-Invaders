@@ -45,11 +45,11 @@ class Alien:
             self.position[1] = 0
     
     def move_left(self):
-        self.position[0] -= 0.5
+        self.position[0] -= 0.1
         self.set_rect()
     
     def move_right(self):
-        self.position[0] += 0.5
+        self.position[0] += 0.1
         self.set_rect()
         
     def die(self):

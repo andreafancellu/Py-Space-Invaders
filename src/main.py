@@ -3,6 +3,7 @@ from constants import *
 from Shuttle import Shuttle
 from Bullet import Bullet
 from Alien import Alien
+from Boss import Boss
 import pygame
 import time
 import random
@@ -15,12 +16,14 @@ bg = pygame.image.load("/home/andrea/Projects/Py-Space-Invaders/data/background.
 pygame.display.set_caption('Py-Space-Invaders')
 
 #? ----------------------- Initialize Texts -----------------------------------
-font_game_over = pygame.font.SysFont("uroob", 200)
+font_game_over = pygame.font.SysFont("uroob", 180)
 font_text = pygame.font.SysFont("uroob", 30)
 
 #? ----------------------- Initialize Game-Objects ----------------------------
 shuttle = Shuttle("Apollo13", 100, INITIAL_SHUTTLE_POSITION)
 bullet = Bullet([shuttle.get_position()[0]+20, shuttle.get_position()[1]-10])
+boss = Boss("Alienoooo", 100, [SCREEN_WIDTH/2, SCREEN_HEIGHT-600])
+left, right = True, False # used for Aliens movement
 
 aliens = []
 for i in range(31):
@@ -30,6 +33,7 @@ for i in range(31):
         aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-77*(i-10), SCREEN_HEIGHT-500]))
     if 21 <= i <= 30:
         aliens.append(Alien(f"Alien {i}", [SCREEN_WIDTH-77*(i-20), SCREEN_HEIGHT-350]))
+    
 
 running = True
 
@@ -69,16 +73,27 @@ while running:
     shuttle.draw_shuttle(screen)
     for alien in aliens:
         alien.draw_alien(screen)
+    boss.draw_boss(screen)
 
     #? ----------------------- Aliens Movements ----------------------------
     rand = random.randint(0,1)
+
     for alien in aliens:
         alien.move_down()
-        '''if rand == 1:
-            alien.move_left()
-        else:
-            alien.move_right()'''
 
+    for alien in aliens:
+
+        if left:
+            alien.move_left()
+            if alien.get_position()[0] <= 0:
+                right = True
+                left = False
+                
+        if right:
+            alien.move_right()
+            if alien.get_position()[0] >= SCREEN_WIDTH+30:
+                left = True
+                right = False
 
     #? ----------------------- Shooting ----------------------------
     if shuttle.get_shot():
