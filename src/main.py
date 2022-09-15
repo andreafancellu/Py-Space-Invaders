@@ -12,7 +12,7 @@ pygame.init()
 
 #? ----------------------- Initialize Variables -------------------------------
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-bg = pygame.image.load("/home/andrea/Projects/Py-Space-Invaders/data/background.png")
+bg = pygame.image.load("data/background.png")
 pygame.display.set_caption('Py-Space-Invaders')
 
 #? ----------------------- Initialize Texts -----------------------------------

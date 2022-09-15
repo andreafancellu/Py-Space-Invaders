@@ -6,7 +6,7 @@ class Alien:
         self.name = name
         self.is_dead = False
         self.position = position
-        self.texture = pygame.image.load("/home/andrea/Projects/Py-Space-Invaders/data/alien.png").convert()
+        self.texture = pygame.image.load("data/alien.png").convert()
         self.rect = self.texture.get_rect()
 
     #* getters and setters

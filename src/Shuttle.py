@@ -11,7 +11,7 @@ class Shuttle:
         self.hp = hp
         self.is_dead = False
         self.position = position
-        self.texture = pygame.image.load("/home/andrea/Projects/Py-Space-Invaders/data/shuttle.png").convert()
+        self.texture = pygame.image.load("data/shuttle.png").convert()
         self.rect = self.texture.get_rect()
         self.score = 0
         self.shot = False

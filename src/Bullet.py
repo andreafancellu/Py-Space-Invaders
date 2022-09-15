@@ -6,7 +6,7 @@ class Bullet:
     def __init__(self, position):
         self.name = "Bullet"
         self.position = position
-        self.texture = pygame.image.load("/home/andrea/Projects/Py-Space-Invaders/data/bomb.png").convert()
+        self.texture = pygame.image.load("data/bomb.png").convert()
         self.rect = self.texture.get_rect()
                 
     #* getters and setters

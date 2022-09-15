@@ -10,7 +10,7 @@ class Boss:
         self.hp = hp
         self.is_dead = False
         self.position = position
-        self.texture = pygame.image.load("/home/andrea/Projects/Py-Space-Invaders/data/boss.png").convert()
+        self.texture = pygame.image.load("data/boss.png").convert()
         self.rect = self.texture.get_rect()
 
     #? --------------------- getters and setters ----------------------------
