@@ -19,6 +19,7 @@ SHUTTLE_HP = 100
 SHUTTLE_DAMAGE = 10
 BOSS_DAMAGE = 15
 BOSS_HIT_DAMAGE = 25
+BOSS_BULLET_SCALE = 2
 
 INITIAL_SHUTTLE_POSITION = [SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100]
 INITIAL_BOSS_POSITION = [SCREEN_WIDTH / 2, SCREEN_HEIGHT - 600]
@@ -33,6 +34,9 @@ LEVELS = [
         "boss_texture": "boss.png",
         "boss_hp": 100,
         "boss_speed": 85,
+        "boss_shot_damage": 12,
+        "boss_shot_speed": 260,
+        "boss_shot_cooldown_ms": 1300,
     },
     {
         "number": 2,
@@ -43,6 +47,9 @@ LEVELS = [
         "boss_texture": "boss_level2.png",
         "boss_hp": 140,
         "boss_speed": 125,
+        "boss_shot_damage": 18,
+        "boss_shot_speed": 320,
+        "boss_shot_cooldown_ms": 1050,
     },
     {
         "number": 3,
@@ -53,6 +60,9 @@ LEVELS = [
         "boss_texture": "boss_level3.png",
         "boss_hp": 190,
         "boss_speed": 165,
+        "boss_shot_damage": 26,
+        "boss_shot_speed": 390,
+        "boss_shot_cooldown_ms": 820,
     },
 ]
 

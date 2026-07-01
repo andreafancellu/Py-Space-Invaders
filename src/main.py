@@ -12,6 +12,7 @@ from constants import (
     ALIEN_VERTICAL_SPEED,
     BOSS_DAMAGE,
     BOSS_HIT_DAMAGE,
+    BOSS_BULLET_SCALE,
     BULLET_SPEED,
     COLLISION_COOLDOWN_MS,
     FPS,
@@ -142,6 +143,18 @@ def reset_bullet_to_shuttle(bullet, shuttle):
     bullet.set_pos([shuttle.get_position()[0] + 20, shuttle.get_position()[1] - 10])
 
 
+def create_boss_bullet(boss, level):
+    boss_rect = boss.get_rect()
+    boss_bullet = Bullet(
+        [boss_rect.centerx, boss_rect.bottom],
+        level["boss_shot_speed"],
+        direction=1,
+        scale=BOSS_BULLET_SCALE,
+    )
+    boss_bullet.set_pos([boss_rect.centerx - boss_bullet.get_rect().width / 2, boss_rect.bottom])
+    return boss_bullet
+
+
 def update_bullet(bullet, shuttle, dt):
     if shuttle.get_shot():
         bullet.move_bullet(dt)
@@ -170,6 +183,28 @@ def handle_boss_collision(boss, bullet, shuttle):
         reset_bullet_to_shuttle(bullet, shuttle)
 
 
+def update_boss_bullets(boss_bullets, dt):
+    for boss_bullet in boss_bullets:
+        boss_bullet.move_bullet(dt)
+
+    return [
+        boss_bullet
+        for boss_bullet in boss_bullets
+        if boss_bullet.get_pos()[1] <= SCREEN_HEIGHT + boss_bullet.get_rect().height
+    ]
+
+
+def handle_boss_bullet_collisions(boss_bullets, shuttle, damage):
+    remaining_bullets = []
+    for boss_bullet in boss_bullets:
+        if boss_bullet.collision(shuttle):
+            shuttle.take_damage(damage)
+        else:
+            remaining_bullets.append(boss_bullet)
+
+    return remaining_bullets
+
+
 def handle_player_damage(shuttle, enemies, now, last_collision_time, damage):
     if now - last_collision_time <= COLLISION_COOLDOWN_MS:
         return last_collision_time
@@ -188,6 +223,8 @@ def start_level(level_index):
         "level": level,
         "aliens": create_aliens(level),
         "boss": create_boss(level),
+        "boss_bullets": [],
+        "last_boss_shot_time": 0,
         "alien_direction": -1,
         "boss_direction": 1,
         "phase": "aliens",
@@ -243,14 +280,27 @@ def main():
 
                 if all(alien.get_is_dead() for alien in level_state["aliens"]):
                     level_state["phase"] = "boss"
+                    level_state["boss_bullets"].clear()
+                    level_state["last_boss_shot_time"] = pygame.time.get_ticks()
                     reset_bullet_to_shuttle(bullet, shuttle)
             else:
+                now = pygame.time.get_ticks()
                 level_state["boss_direction"] = level_state["boss"].move(level_state["boss_direction"], dt)
+                if now - level_state["last_boss_shot_time"] >= level_state["level"]["boss_shot_cooldown_ms"]:
+                    level_state["boss_bullets"].append(create_boss_bullet(level_state["boss"], level_state["level"]))
+                    level_state["last_boss_shot_time"] = now
+
+                level_state["boss_bullets"] = update_boss_bullets(level_state["boss_bullets"], dt)
+                level_state["boss_bullets"] = handle_boss_bullet_collisions(
+                    level_state["boss_bullets"],
+                    shuttle,
+                    level_state["level"]["boss_shot_damage"],
+                )
                 handle_boss_collision(level_state["boss"], bullet, shuttle)
                 last_collision_time = handle_player_damage(
                     shuttle,
                     [level_state["boss"]],
-                    pygame.time.get_ticks(),
+                    now,
                     last_collision_time,
                     BOSS_HIT_DAMAGE,
                 )
@@ -263,6 +313,7 @@ def main():
                     else:
                         level_state = start_level(level_index)
                         reset_bullet_to_shuttle(bullet, shuttle)
+                        level_state["boss_bullets"].clear()
 
             if shuttle.get_is_dead():
                 game_state = "game_over"
@@ -277,6 +328,8 @@ def main():
 
             if level_state["phase"] == "boss":
                 level_state["boss"].draw_boss(screen)
+                for boss_bullet in level_state["boss_bullets"]:
+                    boss_bullet.draw_bullet(screen)
 
             if shuttle.get_shot():
                 bullet.draw_bullet(screen)
