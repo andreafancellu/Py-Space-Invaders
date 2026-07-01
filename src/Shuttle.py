@@ -1,23 +1,21 @@
 from constants import *
-from Bullet import Bullet
 import pygame
 
-from constants import INITIAL_SHUTTLE_POSITION
 
 class Shuttle:
-    
-    def __init__(self, name, hp, position):
+    def __init__(self, name, hp, position, speed):
         self.name = name
         self.hp = hp
         self.is_dead = False
-        self.position = position
-        self.texture = pygame.image.load("data/shuttle.png").convert()
+        self.position = list(position)
+        self.speed = speed
+        self.texture = pygame.image.load(asset_path("shuttle.png")).convert_alpha()
         self.rect = self.texture.get_rect()
+        self.update_rect()
         self.score = 0
         self.shot = False
-        self.hit = True 
+        self.hit = True
 
-    #* getters and setters
     def get_name(self):
         return self.name
 
@@ -49,7 +47,8 @@ class Shuttle:
         self.is_dead = is_dead
 
     def set_position(self, position):
-        self.position = position
+        self.position = list(position)
+        self.update_rect()
 
     def set_score(self, score):
         self.score = score
@@ -60,30 +59,15 @@ class Shuttle:
     def set_hit(self, hit):
         self.hit = hit
 
-    #* in-game functions
-    def move_left(self):
-        self.position[0] -= 0.5
-        if self.position[0] < 0:
-            self.position[0] = 0
-        self.rect = pygame.Rect(self.position[0], self.position[1], self.rect.width, self.rect.height)
+    def update_rect(self):
+        self.rect.topleft = (round(self.position[0]), round(self.position[1]))
 
-    def move_right(self):
-        self.position[0] += 0.5
-        if self.position[0] > 760:
-            self.position[0] = 760
-        self.rect = pygame.Rect(self.position[0], self.position[1], self.rect.width, self.rect.height)
-
-    def move_up(self):
-        self.position[1] -= 1
-        if self.position[1] < 0:
-            self.position[1] = 0
-        self.rect = pygame.Rect(self.position[0], self.position[1], self.rect.width, self.rect.height)
-
-    def move_down(self):
-        self.position[1] += 1
-        if self.position[1] > 660:
-            self.position[1] = 660
-        self.rect = pygame.Rect(self.position[0], self.position[1], self.rect.width, self.rect.height)
+    def move(self, dx, dy, dt):
+        self.position[0] += dx * self.speed * dt
+        self.position[1] += dy * self.speed * dt
+        self.position[0] = max(0, min(SCREEN_WIDTH - self.rect.width, self.position[0]))
+        self.position[1] = max(0, min(SCREEN_HEIGHT - self.rect.height, self.position[1]))
+        self.update_rect()
 
     def die(self):
         self.is_dead = True
@@ -95,19 +79,18 @@ class Shuttle:
             self.die()
         else:
             print(f"{self.name} has taken {damage} damage, now has {self.hp} hp")
-        #self.draw_shuttle(screen)   
 
     def collision(self, obstacle):
-        if self.rect.colliderect(obstacle.get_rect()):
+        if not obstacle.get_is_dead() and self.rect.colliderect(obstacle.get_rect()):
             print(f"{self.name} has collided with {obstacle.get_name()}")
             self.take_damage(10)
 
     def draw_shuttle(self, screen):
         screen.blit(self.texture, self.position)
-        #pygame.draw.rect(screen, (0, 120, 120), self.rect)
     
     def shoot(self):
-        self.shot = True
+        if not self.shot:
+            self.shot = True
 
     def score_up(self):
         self.score += 1

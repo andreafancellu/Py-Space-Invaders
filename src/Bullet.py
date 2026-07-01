@@ -1,15 +1,17 @@
 import pygame
 
+from constants import asset_path
+
 
 class Bullet:
-
-    def __init__(self, position):
+    def __init__(self, position, speed):
         self.name = "Bullet"
-        self.position = position
-        self.texture = pygame.image.load("data/bomb.png").convert()
+        self.position = list(position)
+        self.speed = speed
+        self.texture = pygame.image.load(asset_path("bomb.png")).convert_alpha()
         self.rect = self.texture.get_rect()
+        self.update_rect()
                 
-    #* getters and setters
     def get_name(self):
         return self.name
 
@@ -20,16 +22,18 @@ class Bullet:
         return self.rect
 
     def set_pos(self, position):
-        self.position = position
+        self.position = list(position)
+        self.update_rect()
+
+    def update_rect(self):
+        self.rect.topleft = (round(self.position[0]), round(self.position[1]))
         
-    #* in-game functions
     def draw_bullet(self, screen):
         screen.blit(self.texture, self.position)
-        #pygame.draw.rect(screen, (0, 120, 120), self.rect)
 
-    def move_bullet(self):
-        self.position[1] -= 2
-        self.rect = pygame.Rect(self.position[0], self.position[1], self.rect.width, self.rect.height)
+    def move_bullet(self, dt):
+        self.position[1] -= self.speed * dt
+        self.update_rect()
 
     def collision(self, obstacle):
-        return self.rect.colliderect(obstacle.get_rect())
+        return not obstacle.get_is_dead() and self.rect.colliderect(obstacle.get_rect())

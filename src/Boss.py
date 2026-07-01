@@ -1,19 +1,18 @@
-from constants import *
-from Bullet import Bullet
 import pygame
+
+from constants import asset_path
 
 
 class Boss:
-
     def __init__(self, name, hp, position):
         self.name = name
         self.hp = hp
         self.is_dead = False
-        self.position = position
-        self.texture = pygame.image.load("data/boss.png").convert()
+        self.position = list(position)
+        self.texture = pygame.image.load(asset_path("boss.png")).convert_alpha()
         self.rect = self.texture.get_rect()
+        self.update_rect()
 
-    #? --------------------- getters and setters ----------------------------
     def get_name(self):
         return self.name
 
@@ -30,15 +29,15 @@ class Boss:
         return self.rect
 
     def set_is_dead(self, death):
-        self.get_is_dead = death
+        self.is_dead = death
 
     def set_position(self, position):
-        self.position = position
+        self.position = list(position)
+        self.update_rect()
 
-    def set_rect(self, rect):
-        self.rect = rect
+    def update_rect(self):
+        self.rect.topleft = (round(self.position[0]), round(self.position[1]))
 
-    #? ---------------------- in game functions --------------------------
     def die(self):
         self.is_dead = True
         print(f"{self.name} has died")
@@ -57,5 +56,5 @@ class Boss:
             self.take_damage(10)
 
     def draw_boss(self, screen):
-        screen.blit(self.texture, self.position)
-        #pygame.draw.rect(screen, (0, 120, 120), self.rect)
+        if not self.is_dead:
+            screen.blit(self.texture, self.position)
