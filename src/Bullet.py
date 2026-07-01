@@ -4,11 +4,16 @@ from constants import asset_path
 
 
 class Bullet:
-    def __init__(self, position, speed):
+    def __init__(self, position, speed, direction=-1, scale=1):
         self.name = "Bullet"
         self.position = list(position)
         self.speed = speed
+        self.direction = direction
         self.texture = pygame.image.load(asset_path("bomb.png")).convert_alpha()
+        if scale != 1:
+            width = self.texture.get_width() * scale
+            height = self.texture.get_height() * scale
+            self.texture = pygame.transform.scale(self.texture, (width, height))
         self.rect = self.texture.get_rect()
         self.update_rect()
                 
@@ -32,7 +37,7 @@ class Bullet:
         screen.blit(self.texture, self.position)
 
     def move_bullet(self, dt):
-        self.position[1] -= self.speed * dt
+        self.position[1] += self.direction * self.speed * dt
         self.update_rect()
 
     def collision(self, obstacle):

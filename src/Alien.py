@@ -3,12 +3,22 @@ import pygame
 from constants import asset_path
 
 
+def tint_surface(surface, color):
+    tinted = surface.copy()
+    tint = pygame.Surface(tinted.get_size(), pygame.SRCALPHA)
+    tint.fill((*color, 255))
+    tinted.blit(tint, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+    return tinted
+
+
 class Alien:
-    def __init__(self, name, position):
+    def __init__(self, name, position, tint_color=None):
         self.name = name
         self.is_dead = False
         self.position = list(position)
         self.texture = pygame.image.load(asset_path("alien.png")).convert_alpha()
+        if tint_color is not None:
+            self.texture = tint_surface(self.texture, tint_color)
         self.rect = self.texture.get_rect()
         self.update_rect()
 
