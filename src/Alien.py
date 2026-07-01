@@ -1,15 +1,17 @@
 import pygame
 
-class Alien:
+from constants import asset_path
 
+
+class Alien:
     def __init__(self, name, position):
         self.name = name
         self.is_dead = False
-        self.position = position
-        self.texture = pygame.image.load("data/alien.png").convert()
+        self.position = list(position)
+        self.texture = pygame.image.load(asset_path("alien.png")).convert_alpha()
         self.rect = self.texture.get_rect()
+        self.update_rect()
 
-    #* getters and setters
     def get_name(self):
         return self.name
 
@@ -26,43 +28,37 @@ class Alien:
         self.is_dead = is_dead
 
     def set_position(self, position):
-        self.position = position
+        self.position = list(position)
+        self.update_rect()
 
-    def set_rect(self):
-        self.rect = pygame.Rect(self.position[0], self.position[1], self.rect.width, self.rect.height)
+    def update_rect(self):
+        self.rect.topleft = (round(self.position[0]), round(self.position[1]))
 
-    #* in-game functions
     def draw_alien(self, screen):
-        if not(self.is_dead):
+        if not self.is_dead:
             screen.blit(self.texture, self.position)
-            self.rect = pygame.Rect(self.position[0], self.position[1], self.rect.width, self.rect.height)
-            #pygame.draw.rect(screen, (124, 123, 89), self.rect)
 
-    def move_down(self):
-        self.position[1] += 0.1
-        self.set_rect()
+    def move_down(self, distance):
+        if self.is_dead:
+            return
+
+        self.position[1] += distance
         if self.position[1] > 700:
             self.position[1] = 0
-    
-    def move_left(self):
-        self.position[0] -= 0.1
-        self.set_rect()
-    
-    def move_right(self):
-        self.position[0] += 0.1
-        self.set_rect()
+        self.update_rect()
+
+    def move_horizontal(self, distance):
+        if self.is_dead:
+            return
+
+        self.position[0] += distance
+        self.update_rect()
         
     def die(self):
-        self.set_is_dead = True
+        self.is_dead = True
         self.set_position([-100, -100])
 
-    #! inutile post bullet.collision(alien)
     def collision(self, obstacle):
-        if self.rect.colliderect(obstacle.get_rect()):
+        if not self.is_dead and self.rect.colliderect(obstacle.get_rect()):
             print(f"{self.name} has collided with {obstacle.get_name()}")
             self.die()
-
-            
-    
-
-    
